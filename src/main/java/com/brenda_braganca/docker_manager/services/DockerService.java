@@ -2,17 +2,16 @@ package com.brenda_braganca.docker_manager.services;
 
 import java.util.List;
 
-import org.jvnet.hk2.annotations.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.stereotype.Service;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.model.Container;
 import com.github.dockerjava.api.model.Image;
 
 @Service
 public class DockerService {
-    @Autowired
-    private DockerClient dockerClient;
+    
+    private final DockerClient dockerClient;
+
     
     public DockerService(DockerClient client){
         this.dockerClient = client;
@@ -28,6 +27,10 @@ public class DockerService {
 
     public void startContainer(String containerId){
         dockerClient.startContainerCmd(containerId).exec();
+    }
+
+    public List<Image> filterImages(String filter){
+        return dockerClient.listImagesCmd().withImageNameFilter(filter).exec();
     }
 
     public void stopContainer(String containerId){
